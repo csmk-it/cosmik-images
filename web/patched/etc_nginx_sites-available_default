@@ -1,0 +1,18 @@
+server {
+	listen 8080 default_server;
+	listen [::]:8080 default_server;
+
+	root /project/pub;
+	index index.html index.php;
+
+	location / {
+		try_files $uri /index.php$is_args$args;
+		include snippets/project.conf;
+	}
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_param SCRIPT_NAME "";
+		fastcgi_pass unix:/opt/phpbrew/php/php-7/var/run/php-fpm.sock;
+	}
+}

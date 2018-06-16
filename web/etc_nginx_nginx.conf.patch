@@ -1,0 +1,50 @@
+--- web/original/etc_nginx_nginx.conf
++++ web/patched/etc_nginx_nginx.conf
+@@ -1,6 +1,7 @@
+ user www-data;
+ worker_processes auto;
+ pid /run/nginx.pid;
++daemon off;
+ 
+ events {
+ 	worker_connections 768;
+@@ -13,12 +14,17 @@
+ 	# Basic Settings
+ 	##
+ 
+-	sendfile on;
++    # works not well with virtualbox:
++	sendfile off;
++
+ 	tcp_nopush on;
+ 	tcp_nodelay on;
+ 	keepalive_timeout 65;
+ 	types_hash_max_size 2048;
+-	# server_tokens off;
++	server_tokens off;
++	client_max_body_size 64M;
++	fastcgi_buffers 16 16k;
++	fastcgi_buffer_size 32k;
+ 
+ 	# server_names_hash_bucket_size 64;
+ 	# server_name_in_redirect off;
+@@ -37,15 +43,15 @@
+ 	# Logging Settings
+ 	##
+ 
+-	access_log /var/log/nginx/access.log;
+-	error_log /var/log/nginx/error.log;
++	access_log /dev/null;
++	error_log /proc/self/fd/1 warn;
+ 
+ 	##
+ 	# Gzip Settings
+ 	##
+ 
+-	gzip on;
+-	gzip_disable "msie6";
++	#gzip on;
++	#gzip_disable "msie6";
+ 
+ 	# gzip_vary on;
+ 	# gzip_proxied any;

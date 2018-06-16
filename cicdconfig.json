@@ -1,0 +1,11 @@
+{
+	"build": [
+		["cosmik/web", "web/Dockerfile", [
+			["cosmik/web_dev", "web_dev/Dockerfile"],
+			["cosmik/tools",     "tools/Dockerfile"]
+		]],
+		["cosmik/search",       "search/Dockerfile"],
+		["cosmik/websocket", "websocket/Dockerfile"],
+		["cosmik/config",       "config/Dockerfile"]
+	]
+}
