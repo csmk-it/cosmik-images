@@ -11,9 +11,6 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14
     && apt-get update \
     && apt-get install --no-install-recommends -yq \
         nodejs \
-        curl \
-        git \
-        ssh \
         vim \
         python-pip \
         python-setuptools \
@@ -24,8 +21,6 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14
     && rm -rf /var/lib/apt/lists/* \
     && npm config set bin-links false \
     && pip install dex \
-    && curl https://getcomposer.org/installer | /bin/bash -c "source /root/.phpbrew/bashrc && php -- --install-dir=/usr/local/bin" \
-    && /bin/bash -c "source /root/.phpbrew/bashrc && composer.phar global require hirak/prestissimo" \
     && sed -i s/#force_color_prompt=yes/force_color_prompt=yes/ ~/.bashrc
 
 COPY ./tools/bash_history /root/.bash_history

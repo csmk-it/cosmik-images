@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-# Let the conatiner know that there is no tty
+# Let the conatiner know that there is no tty:
 ENV DEBIAN_FRONTEND noninteractive
 ENV PHPBREW_ROOT /opt/phpbrew
 
@@ -13,6 +13,7 @@ RUN apt-get update -yq \
         git \
         ca-certificates \
         curl \
+        ssh \
         php \
         pkg-config \
         build-essential \
@@ -26,6 +27,7 @@ RUN apt-get update -yq \
         libmagickwand-dev \
         libmagickcore-dev \
         libcurl4-openssl-dev \
+    # Setup php with dependencies: \
     && curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew \
     && chmod +x phpbrew \
     && mv phpbrew /usr/local/bin/phpbrew \
@@ -42,12 +44,18 @@ RUN apt-get update -yq \
         && phpbrew --no-interact ext install gd \
         && phpbrew --no-interact ext install github:phpredis/phpredis \
         && phpbrew --no-interact ext install mongodb" \
+    # Link php config files for cli and fpm usage: \
     && mkdir /opt/phpbrew/php/php-7/etc/cli \
     && mkdir /opt/phpbrew/php/php-7/etc/fpm \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/cli; done \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/fpm; done \
     && rm /opt/phpbrew/php/php-7/etc/fpm/pthreads.ini \
-    && apt-get remove --purge -yq build-essential git \
+    # Setup composer: \
+    && curl https://getcomposer.org/installer | /bin/bash -c "source /root/.phpbrew/bashrc \
+        && php -- --install-dir=/usr/local/bin \
+        && composer.phar global require hirak/prestissimo" \
+    # Remove unneeded packages and apt cache: \
+    && apt-get remove --purge -yq build-essential \
     && apt-get autoremove --purge -yq \
     && rm -rf /var/lib/apt/lists/*
 
