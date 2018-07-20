@@ -70,8 +70,12 @@ run_cmd() {
 
 	for field in $3; do
 		if [ "$1" = "docker" ] && [ "$2" = "build" ]; then
+		    # remove path:
+			dockerfile=${field##*/}
+			# remove tag and add context relative path to Dockerfile:
+			dockerfile=${dockerfile%:*}/Dockerfile
 			folder="$(dirname "$0")"
-			$1 "$2" "--tag=$field" "-f=${field##*/}/Dockerfile" "$folder"
+			$1 "$2" "--tag=$field" "-f=$dockerfile" "$folder"
 		elif [ "$1" = "docker" ] && [ "$2" = "push" ]; then
 			$1 "$2" "$field"
 		else
