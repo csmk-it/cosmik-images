@@ -7,6 +7,7 @@ ENV PHPBREW_ROOT /opt/phpbrew
 RUN apt-get update -yq \
     && apt-get install --no-install-recommends -yq \
         apt-transport-https \
+        vim \
         patch \
         varnish \
         nginx \
@@ -27,8 +28,16 @@ RUN apt-get update -yq \
         libmagickwand-dev \
         libmagickcore-dev \
         libcurl4-openssl-dev \
+        software-properties-common \
+    # Add docker client: \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
+    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+    && apt-get update -yq \
+    && apt-get install --no-install-recommends -yq docker-ce
+
+RUN \
     # Setup php with dependencies: \
-    && curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew \
+    curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew \
     && chmod +x phpbrew \
     && mv phpbrew /usr/local/bin/phpbrew \
     && mkdir /opt/phpbrew \
@@ -53,9 +62,11 @@ RUN apt-get update -yq \
     # Setup composer: \
     && curl https://getcomposer.org/installer | /bin/bash -c "source /root/.phpbrew/bashrc \
         && php -- --install-dir=/usr/local/bin \
-        && composer.phar global require hirak/prestissimo" \
+        && composer.phar global require hirak/prestissimo"
+
+RUN \
     # Remove unneeded packages and apt cache: \
-    && apt-get remove --purge -yq build-essential \
+    apt-get remove --purge -yq build-essential \
     && apt-get autoremove --purge -yq \
     && rm -rf /var/lib/apt/lists/*
 

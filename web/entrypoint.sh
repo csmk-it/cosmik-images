@@ -14,7 +14,7 @@ IFS='
 for current in $(env); do
 	env_key=${current%=*}
 	env_value=${current#*=}
-	if [ "$env_key" != "_" ]; then
+	if [ "$env_key" != "_" ] && [ "$env_value" != "" ]; then
 		conf_entry="env[$env_key] = \"$env_value\""
 		# check if conf line is not longer than 1024 chars
 		if [ ${#conf_entry} -gt 1024 ]; then
