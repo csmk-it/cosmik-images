@@ -1,4 +1,3 @@
 # Inheritance
 
 See cicdconfig.json
-
