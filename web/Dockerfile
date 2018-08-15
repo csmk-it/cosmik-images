@@ -7,7 +7,6 @@ ENV PHPBREW_ROOT /opt/phpbrew
 RUN apt-get update -yq \
     && apt-get install --no-install-recommends -yq \
         apt-transport-https \
-        vim \
         patch \
         varnish \
         nginx \

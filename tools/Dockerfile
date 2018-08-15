@@ -9,6 +9,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14
     && apt-get update \
     && apt-get install --no-install-recommends -yq \
         nodejs \
+        vim \
         python-pip \
         python-setuptools \
         python-wheel \
