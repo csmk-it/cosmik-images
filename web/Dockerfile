@@ -44,18 +44,29 @@ RUN \
     && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc \
     && /bin/bash -c "source /root/.phpbrew/bashrc \
         && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.2 as php-7 +default +fpm +intl -- --enable-maintainer-zts \
+        && echo ..........a.......... \
         && phpbrew --no-interact switch php-7 \
+        && echo ..........b.......... \
         && export PHPBREW_PHP=php-7 \
+        && echo ..........c.......... \
         && phpbrew --no-interact ext install --downloader curl github:krakjoe/pthreads \
+        && echo ..........d.......... \
         && phpbrew --no-interact ext install --downloader curl apcu \
+        && echo ..........e.......... \
         && phpbrew --no-interact ext install --downloader curl imagick \
+        && echo ..........f.......... \
         && phpbrew --no-interact ext install --downloader curl gd \
+        && echo ..........g.......... \
         && phpbrew --no-interact ext install --downloader curl github:phpredis/phpredis \
-        && phpbrew --no-interact ext install --downloader curl mongodb"
+        && echo ..........h.......... \
+        && phpbrew --no-interact ext install --downloader curl mongodb \
+        && echo ..........i.........."
+    && echo ..........j..........
 
 RUN \
+    echo ..........k.......... \
     # Link php config files for cli and fpm usage: \
-    mkdir /opt/phpbrew/php/php-7/etc/cli \
+    && mkdir /opt/phpbrew/php/php-7/etc/cli \
     && mkdir /opt/phpbrew/php/php-7/etc/fpm \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/cli; done \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/fpm; done \
