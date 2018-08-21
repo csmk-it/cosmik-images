@@ -39,12 +39,10 @@ RUN \
     curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew \
     && chmod +x phpbrew \
     && mv phpbrew /usr/local/bin/phpbrew \
-    && mkdir /opt/phpbrew
-
-RUN phpbrew --no-interact init --root=/opt/phpbrew \
-    && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc
-
-RUN /bin/bash -c "source /root/.phpbrew/bashrc \
+    && mkdir /opt/phpbrew \
+    && phpbrew --no-interact init --root=/opt/phpbrew \
+    && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc \
+    && /bin/bash -c "source /root/.phpbrew/bashrc \
         && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.2 as php-7 +default +fpm +intl -- --enable-maintainer-zts \
         && phpbrew --no-interact switch php-7 \
         && export PHPBREW_PHP=php-7 \
@@ -65,9 +63,7 @@ RUN \
     # Setup composer: \
     && curl https://getcomposer.org/installer | /bin/bash -c "source /root/.phpbrew/bashrc \
         && php -- --install-dir=/usr/local/bin \
-        && composer.phar global require hirak/prestissimo"
-
-RUN \
+        && composer.phar global require hirak/prestissimo" \
     # Remove unneeded packages and apt cache: \
     apt-get remove --purge -yq build-essential \
     && apt-get autoremove --purge -yq \
