@@ -35,7 +35,7 @@ RUN apt-get update -yq \
     && apt-get install --no-install-recommends -yq docker-ce
 
 RUN \
-    # Setup php with dependencies: \
+    # Setup php with dependencies:  \
     curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew \
     && chmod +x phpbrew \
     && mv phpbrew /usr/local/bin/phpbrew \
