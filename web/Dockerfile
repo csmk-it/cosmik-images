@@ -57,7 +57,7 @@ RUN /bin/bash -c "source /root/.phpbrew/bashrc \
 
 RUN \
     # Link php config files for cli and fpm usage: \
-    && mkdir /opt/phpbrew/php/php-7/etc/cli \
+    mkdir /opt/phpbrew/php/php-7/etc/cli \
     && mkdir /opt/phpbrew/php/php-7/etc/fpm \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/cli; done \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/fpm; done \
