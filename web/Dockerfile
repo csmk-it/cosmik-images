@@ -42,8 +42,9 @@ RUN \
     && mkdir /opt/phpbrew
 
 RUN phpbrew --no-interact init --root=/opt/phpbrew \
-    && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc \
-    && /bin/bash -c "source /root/.phpbrew/bashrc \
+    && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc
+
+RUN /bin/bash -c "source /root/.phpbrew/bashrc \
         && phpbrew --no-interact install -j $(nproc) --production 7.2 as php-7 +default +fpm +intl -- --enable-maintainer-zts \
         && phpbrew --no-interact switch php-7 \
         && export PHPBREW_PHP=php-7 \
