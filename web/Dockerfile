@@ -60,7 +60,7 @@ RUN \
         && phpbrew --no-interact ext install --downloader curl github:phpredis/phpredis \
         && echo ..........h.......... \
         && phpbrew --no-interact ext install --downloader curl mongodb \
-        && echo ..........i.........."
+        && echo ..........i.........." \
     && echo ..........j..........
 
 RUN \
