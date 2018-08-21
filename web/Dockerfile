@@ -39,8 +39,9 @@ RUN \
     curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew \
     && chmod +x phpbrew \
     && mv phpbrew /usr/local/bin/phpbrew \
-    && mkdir /opt/phpbrew \
-    && phpbrew --no-interact init --root=/opt/phpbrew \
+    && mkdir /opt/phpbrew
+
+RUN phpbrew --no-interact init --root=/opt/phpbrew \
     && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc \
     && /bin/bash -c "source /root/.phpbrew/bashrc \
         && phpbrew --no-interact install -j $(nproc) --production 7.2 as php-7 +default +fpm +intl -- --enable-maintainer-zts \
@@ -51,7 +52,9 @@ RUN \
         && phpbrew --no-interact ext install imagick \
         && phpbrew --no-interact ext install gd \
         && phpbrew --no-interact ext install github:phpredis/phpredis \
-        && phpbrew --no-interact ext install mongodb" \
+        && phpbrew --no-interact ext install mongodb"
+
+RUN \
     # Link php config files for cli and fpm usage: \
     && mkdir /opt/phpbrew/php/php-7/etc/cli \
     && mkdir /opt/phpbrew/php/php-7/etc/fpm \
