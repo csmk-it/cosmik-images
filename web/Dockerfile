@@ -45,15 +45,15 @@ RUN phpbrew --no-interact init --root=/opt/phpbrew \
     && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc
 
 RUN /bin/bash -c "source /root/.phpbrew/bashrc \
-        && phpbrew --no-interact install -j $(nproc) --production 7.2 as php-7 +default +fpm +intl -- --enable-maintainer-zts \
+        && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.2 as php-7 +default +fpm +intl -- --enable-maintainer-zts \
         && phpbrew --no-interact switch php-7 \
         && export PHPBREW_PHP=php-7 \
-        && phpbrew --no-interact ext install github:krakjoe/pthreads \
-        && phpbrew --no-interact ext install apcu \
-        && phpbrew --no-interact ext install imagick \
-        && phpbrew --no-interact ext install gd \
-        && phpbrew --no-interact ext install github:phpredis/phpredis \
-        && phpbrew --no-interact ext install mongodb"
+        && phpbrew --no-interact ext install --downloader curl github:krakjoe/pthreads \
+        && phpbrew --no-interact ext install --downloader curl apcu \
+        && phpbrew --no-interact ext install --downloader curl imagick \
+        && phpbrew --no-interact ext install --downloader curl gd \
+        && phpbrew --no-interact ext install --downloader curl github:phpredis/phpredis \
+        && phpbrew --no-interact ext install --downloader curl mongodb"
 
 RUN \
     # Link php config files for cli and fpm usage: \
