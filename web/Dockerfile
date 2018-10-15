@@ -31,8 +31,18 @@ RUN apt-get update -yq \
     # Add docker client: \
     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
     && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+    # Add nodejs: \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 68576280 \
+    && echo "deb https://deb.nodesource.com/node_6.x xenial main" | tee /etc/apt/sources.list.d/nodesource.list \
+    # Add yarn:
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    # Install: \
     && apt-get update -yq \
-    && apt-get install --no-install-recommends -yq docker-ce
+    && apt-get install --no-install-recommends -yq \
+        docker-ce \
+        nodejs \
+        yarn
 
 RUN \
     # Setup php with dependencies: \
@@ -43,13 +53,13 @@ RUN \
     && phpbrew --no-interact init --root=/opt/phpbrew \
     && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc \
     && /bin/bash -c "source /root/.phpbrew/bashrc \
-        && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.2 as php-7 +default +fpm +intl +iconv -- --enable-maintainer-zts \
+        && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.2 as php-7 +default +fpm +intl +iconv +mysql \
         && phpbrew --no-interact switch php-7 \
         && export PHPBREW_PHP=php-7 \
-        && phpbrew --no-interact ext install --downloader curl github:krakjoe/pthreads \
+        && phpbrew --no-interact ext install --downloader curl opcache \
         && phpbrew --no-interact ext install --downloader curl apcu \
         && phpbrew --no-interact ext install --downloader curl imagick \
-        && phpbrew --no-interact ext install --downloader curl gd \
+        && phpbrew --no-interact ext install --downloader curl gd -- --with-png-dir=/usr/lib --with-jpeg-dir=/usr/lib \
         && phpbrew --no-interact ext install --downloader curl github:phpredis/phpredis \
         && phpbrew --no-interact ext install --downloader curl mongodb"
 
@@ -59,13 +69,13 @@ RUN \
     && mkdir /opt/phpbrew/php/php-7/etc/fpm \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/cli; done \
     && for d in /opt/phpbrew/php/php-7/var/db/*; do ln -s "$d" /opt/phpbrew/php/php-7/etc/fpm; done \
-    && rm /opt/phpbrew/php/php-7/etc/fpm/pthreads.ini \
     # Setup composer: \
     && curl https://getcomposer.org/installer | /bin/bash -c "source /root/.phpbrew/bashrc \
         && php -- --install-dir=/usr/local/bin \
         && composer.phar global require hirak/prestissimo" \
+    && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer \
     # Remove unneeded packages and apt cache: \
-    apt-get remove --purge -yq build-essential \
+    && apt-get remove --purge -yq build-essential \
     && apt-get autoremove --purge -yq \
     && rm -rf /var/lib/apt/lists/*
 
