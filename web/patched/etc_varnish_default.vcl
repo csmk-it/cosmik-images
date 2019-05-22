@@ -18,6 +18,23 @@ backend default {
     .port = "8080";
 }
 
+sub vcl_hash {
+    # Default, add url and host name or ip to the cache key:
+    hash_data(req.url);
+    if (req.http.host) {
+        hash_data(req.http.host);
+    } else {
+        hash_data(server.ip);
+    }
+
+    # Separate http and https:
+    if (req.http.X-Forwarded-Proto) {
+        hash_data(req.http.X-Forwarded-Proto);
+    }
+
+    return (lookup);
+}
+
 sub vcl_recv {
     # Happens before we check if we have this in cache already.
     #
