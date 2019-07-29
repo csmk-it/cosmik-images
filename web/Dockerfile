@@ -6,6 +6,7 @@ ENV PHPBREW_ROOT /opt/phpbrew
 
 RUN apt-get update -yq \
     && apt-get install --no-install-recommends -yq \
+        vim \
         apt-transport-https \
         patch \
         varnish \
@@ -57,7 +58,9 @@ RUN \
     && /bin/bash -c "source /root/.phpbrew/bashrc \
         && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.3 as php-7 +default +fpm +intl +iconv +mysql \
         && phpbrew --no-interact switch php-7 \
-        && export PHPBREW_PHP=php-7 \
+        && export PHPBREW_PHP=php-7"
+
+RUN /bin/bash -c "source /root/.phpbrew/bashrc \
         && phpbrew --no-interact ext install --downloader curl opcache \
         && phpbrew --no-interact ext install --downloader curl apcu \
         && phpbrew --no-interact ext install --downloader curl imagick \
