@@ -1,27 +1,21 @@
 3a4
 > daemon off;
-16c17,19
+17c18,20
 < 	sendfile on;
 ---
 >     # works not well with virtualbox:
 > 	sendfile off;
 > 
-21c24,27
+22c25,28
 < 	# server_tokens off;
 ---
 > 	server_tokens off;
 > 	client_max_body_size 64M;
 > 	fastcgi_buffers 16 16k;
 > 	fastcgi_buffer_size 32k;
-40,41c46,47
+41,42c47,48
 < 	access_log /var/log/nginx/access.log;
 < 	error_log /var/log/nginx/error.log;
 ---
 > 	access_log /dev/null;
 > 	error_log /proc/self/fd/1 warn;
-47,48c53,54
-< 	gzip on;
-< 	gzip_disable "msie6";
----
-> 	#gzip on;
-> 	#gzip_disable "msie6";

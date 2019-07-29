@@ -16,11 +16,11 @@
 < ;catch_workers_output = yes
 ---
 > catch_workers_output = yes
-382c382
+389c389
 < ;clear_env = no
 ---
 > clear_env = no
-422c422
+429c429
 < ;php_admin_value[error_log] = /var/log/fpm-php.www.log
 ---
-> php_admin_value[error_log] = /proc/self/fd/2
+> php_admin_value[error_log] = /proc/self/fd/1

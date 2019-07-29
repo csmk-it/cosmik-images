@@ -1,8 +1,9 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Let the conatiner know that there is no tty:
 ENV DEBIAN_FRONTEND noninteractive
 ENV PHPBREW_ROOT /opt/phpbrew
+ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE 1;
 
 RUN apt-get update -yq \
     && apt-get install --no-install-recommends -yq \
@@ -14,6 +15,7 @@ RUN apt-get update -yq \
         git \
         ca-certificates \
         curl \
+        gpg-agent \
         ssh \
         php \
         pkg-config \
@@ -28,15 +30,18 @@ RUN apt-get update -yq \
         libmagickwand-dev \
         libmagickcore-dev \
         libcurl4-openssl-dev \
-        software-properties-common \
         libzip-dev \
-        ffmpeg \
+        dirmngr \
+        software-properties-common \
+        ffmpeg
+
+RUN \
     # Add docker client: \
-    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
     && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
     # Add nodejs: \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 68576280 \
-    && echo "deb https://deb.nodesource.com/node_6.x xenial main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh \
+    && bash nodesource_setup.sh \
     # Add yarn:
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \

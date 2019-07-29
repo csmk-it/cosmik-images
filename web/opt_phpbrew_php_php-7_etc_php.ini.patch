@@ -1,16 +1,12 @@
-621c621
-< variables_order = "GPCS"
----
-> variables_order = "EGPCS"
-672c672
+693c693
 < post_max_size = 8M
 ---
 > post_max_size = 64M
-825c825
+845c845
 < upload_max_filesize = 2M
 ---
 > upload_max_filesize = 64M
-939c939
+960c960
 < ;date.timezone =
 ---
 > date.timezone = "Europe/Berlin"
