@@ -33,7 +33,8 @@ RUN apt-get update -yq \
         libzip-dev \
         dirmngr \
         software-properties-common \
-        ffmpeg
+        ffmpeg \
+        php-bz2
 
 RUN \
     # Add docker client: \
@@ -42,15 +43,19 @@ RUN \
     # Add nodejs: \
     && curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh \
     && bash nodesource_setup.sh \
-    # Add yarn:
+    # Add yarn: \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    # Add mongodb tools: \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 \
+    && echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list \
     # Install: \
     && apt-get update -yq \
     && apt-get install --no-install-recommends -yq \
         docker-ce \
         nodejs \
-        yarn
+        yarn \
+        mongodb-org-tools
 
 RUN \
     # Setup php with dependencies: \
@@ -61,7 +66,7 @@ RUN \
     && phpbrew --no-interact init --root=/opt/phpbrew \
     && echo "source /root/.phpbrew/bashrc" >> /root/.bashrc \
     && /bin/bash -c "source /root/.phpbrew/bashrc \
-        && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.3 as php-7 +default +fpm +intl +iconv +mysql \
+        && phpbrew --no-interact install --downloader curl -j $(nproc) --production 7.3 as php-7 +default +fpm +intl +iconv +mysql +session \
         && phpbrew --no-interact switch php-7 \
         && export PHPBREW_PHP=php-7"
 
@@ -70,7 +75,7 @@ RUN /bin/bash -c "source /root/.phpbrew/bashrc \
         && phpbrew --no-interact ext install --downloader curl apcu \
         && phpbrew --no-interact ext install --downloader curl imagick \
         && phpbrew --no-interact ext install --downloader curl gd -- --with-png-dir=/usr/lib --with-jpeg-dir=/usr/lib \
-        && phpbrew --no-interact ext install --downloader curl github:phpredis/phpredis \
+        && phpbrew --no-interact ext install --downloader curl redis \
         && phpbrew --no-interact ext install --downloader curl mongodb"
 
 RUN \
@@ -97,7 +102,6 @@ RUN touch /etc/nginx/snippets/project.conf \
     && patch /etc/nginx/nginx.conf < /tmp/etc_nginx_nginx.conf.patch \
     && patch /etc/nginx/sites-available/default < /tmp/etc_nginx_sites-available_default.patch \
     && patch /etc/varnish/default.vcl < /tmp/etc_varnish_default.vcl.patch \
-    && patch /opt/phpbrew/php/php-7/etc/php.ini < /tmp/opt_phpbrew_php_php-7_etc_php.ini.patch \
     && patch /opt/phpbrew/php/php-7/etc/php-fpm.d/www.conf < /tmp/opt_phpbrew_php_php-7_etc_php-fpm.d_www.conf.patch
 
 WORKDIR /project

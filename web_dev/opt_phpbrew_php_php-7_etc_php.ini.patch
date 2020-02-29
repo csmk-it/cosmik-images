@@ -1,20 +1,20 @@
-460c460
+457c457
 < error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
 ---
 > error_reporting = E_ALL
-477c477
+474c474
 < display_errors = Off
 ---
 > display_errors = On
-488c488
+485c485
 < display_startup_errors = Off
 ---
 > display_startup_errors = On
-533c533
+530c530
 < ;track_errors = Off
 ---
 > track_errors = On
-1914a1915,1923
+1938a1939,1947
 > 
 > [XDebug]
 > xdebug.remote_enable=1

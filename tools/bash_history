@@ -1,9 +1,1 @@
 exit
-php console.php cleanupDatabase
-php console.php createStaticFiles
-php mongodb.php odm:schema:create
-php console.php addUser Showname name@example.com
-mongodump -h cosmik_db -d devdb
-mongorestore -h cosmik_db -d devdb dump/devdb
-rm -rf /project/app/cache/config/ && rm -rf /project/app/cache/content/ && rm -rf /project/app/cache/templates/
-composer.phar install
